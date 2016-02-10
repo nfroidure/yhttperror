@@ -1,0 +1,41 @@
+{
+  "name": "yhttperror",
+  "version": "0.0.0",
+  "description": "It helps to know Y you got an HTTPError.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha index.mocha.js",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- index.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "cover": "istanbul cover --report html _mocha -- index.mocha.js -R spec -t 5000",
+    "cli": "env NPM_RUN_CLI=1",
+    "lint": "eslint index.js index.mocha.js",
+    "preversion": "npm run lint && npm test"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/SimpliField/yhttperror.git"
+  },
+  "keywords": [
+    "http",
+    "error",
+    "why",
+    "better"
+  ],
+  "author": "Nicolas Froidure (Simplifield)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SimpliField/yhttperror/issues"
+  },
+  "devDependencies": {
+    "coveralls": "~2.11.2",
+    "eslint": "^1.10.3",
+    "eslint-config-simplifield": "^1.2.0",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
+    "mocha-lcov-reporter": "^1.0.0"
+  },
+  "dependencies": {}
+}

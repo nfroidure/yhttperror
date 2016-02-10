@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var YHTTPError = require('.');
+var YHTTPError = require('./index');
 
 describe('YHTTPError', function() {
 

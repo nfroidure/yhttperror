@@ -37,5 +37,7 @@
     "mocha": "^2.4.5",
     "mocha-lcov-reporter": "^1.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "yerror": "^1.0.2"
+  }
 }

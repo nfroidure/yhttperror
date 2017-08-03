@@ -1,14 +1,14 @@
 'use strict';
 
-var assert = require('assert');
-var YHTTPError = require('./index');
+const assert = require('assert');
+const YHTTPError = require('./index');
 
-describe('YHTTPError', function() {
+describe('YHTTPError', () => {
 
-  describe('.__constructor', function() {
+  describe('.__constructor', () => {
 
-    it('Should work', function() {
-      var err = new YHTTPError(400, 'E_ERROR', 'arg1', 'arg2');
+    it('Should work', () => {
+      const err = new YHTTPError(400, 'E_ERROR', 'arg1', 'arg2');
 
       assert.equal(err.code, 'E_ERROR');
       assert.equal(err.httpCode, 400);
@@ -17,8 +17,8 @@ describe('YHTTPError', function() {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work without code', function() {
-      var err = new YHTTPError();
+    it('Should work without code', () => {
+      const err = new YHTTPError();
 
       assert.equal(err.code, 'E_UNEXPECTED');
       assert.equal(err.httpCode, 500);
@@ -27,8 +27,8 @@ describe('YHTTPError', function() {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with params', function() {
-      var err = new YHTTPError(302, 'E_ERROR', 'arg1', 'arg2');
+    it('Should work with params', () => {
+      const err = new YHTTPError(302, 'E_ERROR', 'arg1', 'arg2');
 
       assert.equal(err.code, 'E_ERROR');
       assert.equal(err.httpCode, 302);
@@ -39,10 +39,10 @@ describe('YHTTPError', function() {
 
   });
 
-  describe('.cast()', function() {
+  describe('.cast()', () => {
 
-    it('Should work with standard errors and a message', function() {
-      var err = YHTTPError.cast(new Error('This is an error!'));
+    it('Should work with standard errors and a message', () => {
+      const err = YHTTPError.cast(new Error('This is an error!'));
 
       assert.equal(err.code, 'E_UNEXPECTED');
       assert.equal(err.wrappedErrors.length, 1);
@@ -59,8 +59,8 @@ describe('YHTTPError', function() {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should let YHTTPError instances pass through', function() {
-      var err = YHTTPError.cast(
+    it('Should let YHTTPError instances pass through', () => {
+      const err = YHTTPError.cast(
         new YHTTPError(400, 'E_ERROR_1', 'arg1.1', 'arg1.2'),
         500, 'E_ERROR_2', 'arg2.1', 'arg2.2'
       );
@@ -79,10 +79,10 @@ describe('YHTTPError', function() {
 
   });
 
-  describe('.wrap()', function() {
+  describe('.wrap()', () => {
 
-    it('Should work with standard errors and a message', function() {
-      var err = YHTTPError.wrap(new Error('This is an error!'));
+    it('Should work with standard errors and a message', () => {
+      const err = YHTTPError.wrap(new Error('This is an error!'));
 
       assert.equal(err.code, 'E_UNEXPECTED');
       assert.equal(err.wrappedErrors.length, 1);
@@ -99,8 +99,8 @@ describe('YHTTPError', function() {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with standard errors and an error code', function() {
-      var err = YHTTPError.wrap(new Error('E_ERROR'));
+    it('Should work with standard errors and an error code', () => {
+      const err = YHTTPError.wrap(new Error('E_ERROR'));
 
       assert.equal(err.code, 'E_ERROR');
       assert.equal(err.wrappedErrors.length, 1);
@@ -117,8 +117,8 @@ describe('YHTTPError', function() {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with standard errors, an error code and params', function() {
-      var err = YHTTPError.wrap(
+    it('Should work with standard errors, an error code and params', () => {
+      const err = YHTTPError.wrap(
         new Error('E_ERROR'),
         400, 'E_ERROR_2', 'arg1', 'arg2'
       );
@@ -137,8 +137,8 @@ describe('YHTTPError', function() {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with HTTP errors and concat their params', function() {
-      var err = YHTTPError.wrap(
+    it('Should work with HTTP errors and concat their params', () => {
+      const err = YHTTPError.wrap(
         new YHTTPError(400, 'E_ERROR', 'arg1', 'arg2'),
         400, 'E_ERROR_2', 'arg3', 'arg4'
       );
@@ -158,8 +158,8 @@ describe('YHTTPError', function() {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with several wrapped errors', function() {
-      var err = YHTTPError.wrap(
+    it('Should work with several wrapped errors', () => {
+      const err = YHTTPError.wrap(
         YHTTPError.wrap(
             new YHTTPError(
               400,
@@ -179,7 +179,7 @@ describe('YHTTPError', function() {
       );
 
       assert.equal(err.code, 'E_ERROR_3');
-      assert.equal(err.wrappedErrors.length, 2);
+      assert.equal(err.wrappedErrors.length, 2); // eslint-disable-line
       assert.equal(err.httpCode, 402);
       assert.deepEqual(err.params, ['arg1.1', 'arg1.2', 'arg2.1', 'arg2.2', 'arg3.1', 'arg3.2']);
       assert(

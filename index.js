@@ -4,37 +4,24 @@ var util = require('util');
 var os = require('os');
 var YError = require('yerror');
 
-// Create an HTTP Error directly sendable as a server response
-function YHTTPError(httpCode/* , errorCode */) {
+class YHTTPError extends YError {
+  constructor(httpCode = 500, ...params) {
+    super(...params);
 
-  // Ensure new were called
-  if(!this instanceof YHTTPError) {
-    return new (YHTTPError.bind.apply(YHTTPError,
-      [YHTTPError].concat([].slice.call(arguments, 0))));
+    this.httpCode = httpCode;
+    Error.captureStackTrace(this, this.constructor);
   }
 
-  // Capture stack trace
-  Error.captureStackTrace(this, this.constructor);
-
-  // Filling error
-  this.httpCode = httpCode || 500;
-
-  // Call the parent constructor
-  YError.apply(this, [].slice.call(arguments, 1));
+  toString() {
+    return (
+        this.wrappedErrors.length ?
+          this.wrappedErrors[this.wrappedErrors.length - 1].stack + os.EOL :
+          ''
+      ) +
+      this.constructor.name + '[' + this.httpCode + ']: ' + this.code +
+      ' (' + this.params.join(', ') + ')';
+  }
 }
-
-util.inherits(YHTTPError, YError);
-
-// Wrap a classic error
-YHTTPError.prototype.toString = function httpErrorToString() {
-  return (
-    this.wrappedErrors.length ?
-    this.wrappedErrors[this.wrappedErrors.length - 1].stack + os.EOL :
-    ''
-  ) +
-  this.constructor.name + '[' + this.httpCode + ']: ' + this.code +
-  ' (' + this.params.join(', ') + ')';
-};
 
 // Wrap a classic error
 YHTTPError.wrap = function httpErrorWrap(err, httpCode, errorCode/* , params */) {

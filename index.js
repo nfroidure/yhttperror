@@ -27,7 +27,7 @@ class YHTTPError extends YError {
 
 // Wrap a classic error
 YHTTPError.wrap = function httpErrorWrap(err, httpCode, errorCode, ...params) {
-  const wrappedErrorIsACode = (/^([A-Z0-9_]+)$/).test(err.message);
+  const wrappedErrorIsACode = /^([A-Z0-9_]+)$/.test(err.message);
   const mergedParams = (err.params || []).concat(params);
   let httpError = null;
 

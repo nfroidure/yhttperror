@@ -8,6 +8,7 @@
     "coveralls": "istanbul cover _mocha --report lcovonly -- index.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "cover": "istanbul cover --report html _mocha -- index.mocha.js -R spec -t 5000",
     "cli": "env NPM_RUN_CLI=1",
+    "prettify": "prettier --write '*.js'",
     "lint": "eslint index.js index.mocha.js",
     "preversion": "npm run lint && npm test"
   },
@@ -35,7 +36,8 @@
     "eslint-config-simplifield": "7.0.0",
     "istanbul": "0.4.5",
     "mocha": "4.0.1",
-    "mocha-lcov-reporter": "1.3.0"
+    "mocha-lcov-reporter": "1.3.0",
+    "prettier": "1.8.2"
   },
   "dependencies": {
     "yerror": "2.1.0"

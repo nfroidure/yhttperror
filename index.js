@@ -1,76 +1,64 @@
 'use strict';
 
-var util = require('util');
-var os = require('os');
-var YError = require('yerror');
+const os = require('os');
+const YError = require('yerror');
 
-// Create an HTTP Error directly sendable as a server response
-function YHTTPError(httpCode/* , errorCode */) {
+class YHTTPError extends YError {
+  constructor(httpCode, ...params) {
+    super(...params);
 
-  // Ensure new were called
-  if(!this instanceof YHTTPError) {
-    return new (YHTTPError.bind.apply(YHTTPError,
-      [YHTTPError].concat([].slice.call(arguments, 0))));
+    this.httpCode = httpCode || 500;
+    this.name = YHTTPError.name + '[' + this.httpCode + ']: ' + this.code +
+    ' (' + this.params.join(', ') + ')';
+
+    Error.captureStackTrace(this, YHTTPError);
   }
-
-  // Capture stack trace
-  Error.captureStackTrace(this, this.constructor);
-
-  // Filling error
-  this.httpCode = httpCode || 500;
-
-  // Call the parent constructor
-  YError.apply(this, [].slice.call(arguments, 1));
+  toString() {
+    return this.name;
+  }
 }
 
-util.inherits(YHTTPError, YError);
-
 // Wrap a classic error
-YHTTPError.prototype.toString = function httpErrorToString() {
-  return (
-    this.wrappedErrors.length ?
-    this.wrappedErrors[this.wrappedErrors.length - 1].stack + os.EOL :
-    ''
-  ) +
-  this.constructor.name + '[' + this.httpCode + ']: ' + this.code +
-  ' (' + this.params.join(', ') + ')';
-};
-
-// Wrap a classic error
-YHTTPError.wrap = function httpErrorWrap(err, httpCode, errorCode/* , params */) {
-  var httpError = null;
-  var wrappedErrorIsACode = (/^([A-Z_]+)$/).test(err.message);
+YHTTPError.wrap = function httpErrorWrap(err, httpCode, errorCode, ...params) {
+  const wrappedErrorIsACode = (/^([A-Z0-9_]+)$/).test(err.message);
+  const mergedParams = (err.params || []).concat(params);
+  let httpError = null;
 
   if(!errorCode) {
-    if(wrappedErrorIsACode) {
-      errorCode = err.message;
-    } else {
-      errorCode = err.code || 'E_UNEXPECTED';
-    }
+    errorCode = wrappedErrorIsACode ?
+      err.message :
+      err.code || 'E_UNEXPECTED';
   }
-  httpError = new YHTTPError(httpCode, errorCode);
-  httpError.wrappedErrors = (err.wrappedErrors || []).concat(err);
-  httpError.params = (err.params || []).concat(([]).slice.call(arguments, 3));
   if(err.message && !wrappedErrorIsACode) {
-    httpError.params.push(err.message);
+    mergedParams.push(err.message);
   }
-  httpError.name = httpError.toString();
+
+  httpError = new YHTTPError(
+    httpCode,
+    errorCode,
+    ...mergedParams
+  );
+  httpError.wrappedErrors = (err.wrappedErrors || []).concat(err);
+  if(httpError.wrappedErrors.length) {
+    httpError.stack = httpError.wrappedErrors[
+      httpError.wrappedErrors.length - 1
+    ].stack + os.EOL + httpError.stack;
+  }
   return httpError;
 };
 
-YHTTPError.cast = function httpErrorCast(err) {
+YHTTPError.cast = function httpErrorCast(err, ...params) {
   if(err instanceof YHTTPError) {
     return err;
   }
-  return YHTTPError.wrap.apply(YHTTPError, arguments);
+  return YHTTPError.wrap(err, ...params);
 };
 
-YHTTPError.bump = function httpErrorBump(err/* , httpCode*/) {
+YHTTPError.bump = function httpErrorBump(err, ...params) {
   if(err instanceof YHTTPError) {
-    return YHTTPError.wrap.apply(YHTTPError,
-        [err, err.httpCode].concat([].slice.call(arguments, 2)));
+    return YHTTPError.wrap(err, err.httpCode, ...params.slice(2)); // eslint-disable-line
   }
-  return YHTTPError.wrap.apply(YHTTPError, arguments);
+  return YHTTPError.wrap(err, ...params);
 };
 
 module.exports = YHTTPError;

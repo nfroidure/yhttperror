@@ -12,7 +12,7 @@
     "preversion": "npm run lint && npm test"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=6"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,6 @@
     "mocha-lcov-reporter": "^1.0.0"
   },
   "dependencies": {
-    "yerror": "^1.0.2"
+    "yerror": "^2.1.0"
   }
 }

@@ -361,9 +361,9 @@ eslint-config-angular@0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/eslint-config-angular/-/eslint-config-angular-0.5.0.tgz#e0aae0132e39e7467df3f7547fec81a44d3685c4"
 
-eslint-config-simplifield@7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-simplifield/-/eslint-config-simplifield-7.0.0.tgz#aa0d7525a8e12d462e4962cdf912631940d630d2"
+eslint-config-simplifield@7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-simplifield/-/eslint-config-simplifield-7.0.1.tgz#24a7b52b8a766c51b7d9770a87b6a6898c6abfec"
   dependencies:
     eslint-config-angular "0.5.0"
     eslint-plugin-angular "3.1.1"

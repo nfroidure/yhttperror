@@ -1,6 +1,6 @@
 {
   "name": "yhttperror",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "It helps to know Y you got an HTTPError.",
   "main": "index.js",
   "scripts": {

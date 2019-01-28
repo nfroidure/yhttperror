@@ -7,6 +7,12 @@ class YHTTPError extends YError {
   constructor(httpCode = 500, ...params) {
     super(...params);
 
+    // Since we could not ask for a number for the moment,
+    // we check the httpCode is a number here ¯\_(ツ)_/¯
+    if ('number' !== typeof httpCode) {
+      throw new YError('E_BAD_HTTP_CODE', typeof httpCode, httpCode);
+    }
+
     this.httpCode = httpCode;
     this.name =
       YHTTPError.name +

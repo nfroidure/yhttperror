@@ -33,7 +33,7 @@ class YHTTPError extends YError {
 
 // Wrap a classic error
 YHTTPError.wrap = function httpErrorWrap(err, httpCode, errorCode, ...params) {
-  const wrappedErrorIsACode = /^([A-Z0-9_]+)$/.test(err.message);
+  const wrappedErrorIsACode = _looksLikeAYHTTPErrorCode(err.message);
   const mergedParams = (err.params || []).concat(params);
   let httpError = null;
 
@@ -56,17 +56,34 @@ YHTTPError.wrap = function httpErrorWrap(err, httpCode, errorCode, ...params) {
 };
 
 YHTTPError.cast = function httpErrorCast(err, ...params) {
-  if (err instanceof YHTTPError) {
+  if (_looksLikeAYHTTPError(err)) {
     return err;
   }
   return YHTTPError.wrap(err, ...params);
 };
 
 YHTTPError.bump = function httpErrorBump(err, ...params) {
-  if (err instanceof YHTTPError) {
-    return YHTTPError.wrap(err, err.httpCode, ...params.slice(2)); // eslint-disable-line
+  if (_looksLikeAYHTTPError(err)) {
+    return YHTTPError.wrap(err, err.httpCode, ...params.slice(1));
   }
   return YHTTPError.wrap(err, ...params);
 };
+
+// In order to keep compatibility through major versions
+// we have to make kind of an cross major version instanceof
+function _looksLikeAYHTTPError(err) {
+  return err instanceof YHTTPError || (
+     err.constructor &&
+     err.constructor.name &&
+     err.constructor.name.endsWith('Error') &&
+    'string' === typeof err.code && _looksLikeAYHTTPErrorCode(err.code) &&
+    'number' === typeof err.httpCode &&
+    err.params && err.params instanceof Array
+  );
+}
+
+function _looksLikeAYHTTPErrorCode(str) {
+  return (/^([A-Z0-9_]+)$/).test(str);
+}
 
 module.exports = YHTTPError;

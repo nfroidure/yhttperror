@@ -41,6 +41,6 @@
     "prettier": "1.16.1"
   },
   "dependencies": {
-    "yerror": "^3.0.1"
+    "yerror": "^4.0.0"
   }
 }

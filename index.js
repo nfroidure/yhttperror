@@ -23,6 +23,7 @@ class YHTTPError extends YError {
       ' (' +
       this.params.join(', ') +
       ')';
+    this.headers = {};
 
     Error.captureStackTrace(this, YHTTPError);
   }

@@ -7,6 +7,7 @@ declare class YHTTPError extends YError {
   constructor(httpCode: number, errorCode: string, ...params: any[]);
   httpCode: number;
   code: string;
+  headers: { [name: string]: string };
   params: any[];
   static wrap<E extends Error>(
     err: E,

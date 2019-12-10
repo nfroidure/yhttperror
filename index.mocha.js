@@ -13,6 +13,7 @@ describe('YHTTPError', () => {
       assert.deepEqual(err.params, ['arg1', 'arg2']);
       assert.equal(err.toString(), 'YHTTPError[400]: E_ERROR (arg1, arg2)');
       assert.equal(err.name, err.toString());
+      assert.deepEqual(err.headers, {});
     });
 
     it('Should work without code', () => {

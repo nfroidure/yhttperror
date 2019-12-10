@@ -91,24 +91,26 @@ describe('YHTTPError', () => {
       baseErr.params = ['baseParam1', 'baseParam2'];
       baseErr.httpCode = 418;
 
-      const err = YHTTPError.bump(
-        baseErr,
-        400,
-        'E_ERROR_2',
-        'arg1',
-        'arg2'
-      );
+      const err = YHTTPError.bump(baseErr, 400, 'E_ERROR_2', 'arg1', 'arg2');
 
       assert.equal(err.code, 'E_ERROR_2');
       assert.equal(err.wrappedErrors.length, 1);
       assert.equal(err.httpCode, 418);
-      assert.deepEqual(err.params, ['baseParam1', 'baseParam2', 'arg1', 'arg2']);
+      assert.deepEqual(err.params, [
+        'baseParam1',
+        'baseParam2',
+        'arg1',
+        'arg2',
+      ]);
       assert(
         -1 !== err.stack.indexOf('Error: E_ERROR'),
         'Contains the original error.'
       );
       assert(
-        -1 !== err.stack.indexOf('YHTTPError[418]: E_ERROR_2 (baseParam1, baseParam2, arg1, arg2)'),
+        -1 !==
+          err.stack.indexOf(
+            'YHTTPError[418]: E_ERROR_2 (baseParam1, baseParam2, arg1, arg2)'
+          ),
         'Contains the bumped error.'
       );
       assert.equal(err.name, err.toString());

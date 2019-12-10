@@ -1,20 +1,49 @@
 {
   "name": "yhttperror",
   "version": "4.0.0",
-  "description": "It helps to know Y you got an HTTPError.",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "description": "Better HTTP errors for your NodeJS server.",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "metapak": {
+    "configs": [
+      "main",
+      "readme",
+      "eslint",
+      "codeclimate",
+      "mocha",
+      "travis",
+      "jsdocs"
+    ],
+    "data": {
+      "testsFiles": "src/*.mocha.js",
+      "files": "src/*.js",
+      "ignore": [
+        "dist"
+      ],
+      "bundleFiles": [
+        "src/*.d.ts",
+        "src/*.js"
+      ]
+    }
+  },
   "scripts": {
-    "test": "mocha index.mocha.js",
-    "coveralls": "istanbul cover _mocha --report lcovonly -- index.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
-    "cover": "istanbul cover --report html _mocha -- index.mocha.js -R spec -t 5000",
-    "cli": "env NPM_RUN_CLI=1",
-    "prettify": "prettier --write '*.js'",
-    "lint": "eslint index.js index.mocha.js",
-    "preversion": "npm run lint && npm test"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+    "cli": "env NODE_ENV=${NODE_ENV:-cli}",
+    "cover": "nyc npm test && nyc report --reporter=html --reporter=text",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls && rm -rf ./coverage",
+    "cz": "env NODE_ENV=${NODE_ENV:-cli} git cz",
+    "doc": "echo \"# API\" > API.md; jsdoc2md src/*.js >> API.md && git add API.md",
+    "lint": "eslint src/*.js",
+    "metapak": "metapak",
+    "mocha": "mocha src/*.mocha.js",
+    "precz": "npm t && npm run lint && npm run metapak -- -s && npm run doc",
+    "prettier": "prettier --write src/*.js",
+    "preversion": "npm t && npm run lint && npm run metapak -- -s && npm run doc",
+    "test": "npm run mocha",
+    "version": "npm run changelog"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8.12.0"
   },
   "repository": {
     "type": "git",
@@ -26,21 +55,91 @@
     "why",
     "better"
   ],
-  "author": "Nicolas Froidure (Simplifield)",
+  "author": {
+    "name": "Nicolas Froidure (formerly at Simplifield)",
+    "email": "nicolas.froidure@insertafter.com",
+    "url": "http://insertafter.com/en/index.html"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/SimpliField/yhttperror/issues"
   },
   "devDependencies": {
-    "coveralls": "3.0.2",
-    "eslint": "5.12.1",
-    "eslint-config-simplifield": "8.1.0",
-    "istanbul": "0.4.5",
-    "mocha": "5.2.0",
-    "mocha-lcov-reporter": "1.3.0",
-    "prettier": "1.16.1"
+    "commitizen": "^4.0.3",
+    "conventional-changelog-cli": "^2.0.28",
+    "coveralls": "^3.0.5",
+    "cz-conventional-changelog": "^3.0.2",
+    "eslint": "^6.7.1",
+    "eslint-plugin-prettier": "^3.1.1",
+    "jsdoc-to-markdown": "^5.0.3",
+    "metapak": "^3.1.6",
+    "metapak-nfroidure": "9.7.4",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "prettier": "^1.19.1"
   },
   "dependencies": {
-    "yerror": "^4.0.0"
+    "yerror": "^5.0.0"
+  },
+  "contributors": [],
+  "files": [
+    "src/*.d.ts",
+    "src/*.js",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "greenkeeper": {
+    "ignore": [
+      "commitizen",
+      "cz-conventional-changelog",
+      "conventional-changelog-cli",
+      "eslint",
+      "eslint-config-prettier",
+      "prettier",
+      "mocha",
+      "coveralls",
+      "nyc",
+      "jsdoc-to-markdown"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "script",
+      "modules": true
+    },
+    "env": {
+      "es6": true,
+      "node": true,
+      "jest": true,
+      "mocha": true
+    },
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "printWidth": 80,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "proseWrap": "always"
+  },
+  "nyc": {
+    "exclude": [
+      "src/*.mocha.js"
+    ]
   }
 }

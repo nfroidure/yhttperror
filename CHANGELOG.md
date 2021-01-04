@@ -1,3 +1,12 @@
+## [5.0.2](https://github.com/SimpliField/yhttperror/compare/v5.0.1...v5.0.2) (2021-01-04)
+
+
+### Bug Fixes
+
+* **headers:** fix default headers value ([a7f3f99](https://github.com/SimpliField/yhttperror/commit/a7f3f9998e00f4037ae7aa606c825e51e825975f))
+
+
+
 ## [5.0.1](https://github.com/SimpliField/yhttperror/compare/v5.0.0...v5.0.1) (2021-01-04)
 
 

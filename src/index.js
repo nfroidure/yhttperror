@@ -81,6 +81,7 @@ YHTTPError.wrap = function httpErrorWrap(err, httpCode, errorCode, ...params) {
       os.EOL +
       httpError.stack;
   }
+  httpError.headers = err.headers;
   return httpError;
 };
 

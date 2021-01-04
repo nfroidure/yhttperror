@@ -182,17 +182,16 @@ describe('YHTTPError', () => {
     });
 
     it('Should work with HTTP errors and concat their params', () => {
-      const err = YHTTPError.wrap(
-        new YHTTPError(400, 'E_ERROR', 'arg1', 'arg2'),
-        400,
-        'E_ERROR_2',
-        'arg3',
-        'arg4'
-      );
+      const baseErr = new YHTTPError(400, 'E_ERROR', 'arg1', 'arg2');
+
+      baseErr.headers = { 'A-Header': 'A value' };
+
+      const err = YHTTPError.wrap(baseErr, 400, 'E_ERROR_2', 'arg3', 'arg4');
 
       assert.equal(err.code, 'E_ERROR_2');
       assert.equal(err.wrappedErrors.length, 1);
       assert.equal(err.httpCode, 400);
+      assert.equal(err.headers, baseErr.headers);
       assert.deepEqual(err.params, ['arg1', 'arg2', 'arg3', 'arg4']);
       assert(
         -1 !== err.stack.indexOf('YHTTPError[400]: E_ERROR (arg1, arg2)'),

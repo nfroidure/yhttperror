@@ -1,3 +1,17 @@
+# [6.0.0](https://github.com/SimpliField/yhttperror/compare/v5.0.2...v6.0.0) (2021-04-09)
+
+
+### chore
+
+* **dependencies:** update dependencies ([2bcbe36](https://github.com/SimpliField/yhttperror/commit/2bcbe36c4b0038185debbd12a273e30722cd7cb5))
+
+
+### BREAKING CHANGES
+
+* **dependencies:** YError now is built via Babel
+
+
+
 ## [5.0.2](https://github.com/SimpliField/yhttperror/compare/v5.0.1...v5.0.2) (2021-01-04)
 
 

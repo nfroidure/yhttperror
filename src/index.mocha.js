@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require('assert');
-const YHTTPError = require('./index');
+import assert from 'assert';
+import YHTTPError from './index';
 
 describe('YHTTPError', () => {
   describe('.__constructor', () => {
@@ -47,14 +45,14 @@ describe('YHTTPError', () => {
       assert.deepEqual(err.params, ['This is an error!']);
       assert(
         -1 !== err.stack.indexOf('Error: This is an error!'),
-        'Contains the original error.'
+        'Contains the original error.',
       );
       assert(
         -1 !==
           err.stack.indexOf(
-            'YHTTPError[500]: E_UNEXPECTED (This is an error!)'
+            'YHTTPError[500]: E_UNEXPECTED (This is an error!)',
           ),
-        'Contains the cast error.'
+        'Contains the cast error.',
       );
       assert.equal(err.name, err.toString());
     });
@@ -65,7 +63,7 @@ describe('YHTTPError', () => {
         500,
         'E_ERROR_2',
         'arg2.1',
-        'arg2.2'
+        'arg2.2',
       );
 
       assert.equal(err.code, 'E_ERROR_1');
@@ -73,11 +71,11 @@ describe('YHTTPError', () => {
       assert.deepEqual(err.params, ['arg1.1', 'arg1.2']);
       assert(
         -1 !== err.stack.indexOf('YHTTPError[400]: E_ERROR_1 (arg1.1, arg1.2)'),
-        'Contains the original error.'
+        'Contains the original error.',
       );
       assert(
         -1 === err.stack.indexOf('YHTTPError[500]: E_ERROR_2 (arg2.1, arg2.2)'),
-        "Doesn't contain the cast error."
+        "Doesn't contain the cast error.",
       );
       assert.equal(err.name, err.toString());
     });
@@ -104,14 +102,14 @@ describe('YHTTPError', () => {
       ]);
       assert(
         -1 !== err.stack.indexOf('Error: E_ERROR'),
-        'Contains the original error.'
+        'Contains the original error.',
       );
       assert(
         -1 !==
           err.stack.indexOf(
-            'YHTTPError[418]: E_ERROR_2 (baseParam1, baseParam2, arg1, arg2)'
+            'YHTTPError[418]: E_ERROR_2 (baseParam1, baseParam2, arg1, arg2)',
           ),
-        'Contains the bumped error.'
+        'Contains the bumped error.',
       );
       assert.equal(err.name, err.toString());
     });
@@ -127,14 +125,14 @@ describe('YHTTPError', () => {
       assert.deepEqual(err.params, ['This is an error!']);
       assert(
         -1 !== err.stack.indexOf('Error: This is an error!'),
-        'Contains the original error.'
+        'Contains the original error.',
       );
       assert(
         -1 !==
           err.stack.indexOf(
-            'YHTTPError[500]: E_UNEXPECTED (This is an error!)'
+            'YHTTPError[500]: E_UNEXPECTED (This is an error!)',
           ),
-        'Contains the wrapped error.'
+        'Contains the wrapped error.',
       );
       assert.equal(err.name, err.toString());
     });
@@ -148,11 +146,11 @@ describe('YHTTPError', () => {
       assert.deepEqual(err.params, []);
       assert(
         -1 !== err.stack.indexOf('Error: E_ERROR'),
-        'Contains the original error.'
+        'Contains the original error.',
       );
       assert(
         -1 !== err.stack.indexOf('YHTTPError[500]: E_ERROR ()'),
-        'Contains the cast error.'
+        'Contains the cast error.',
       );
       assert.equal(err.name, err.toString());
     });
@@ -163,7 +161,7 @@ describe('YHTTPError', () => {
         400,
         'E_ERROR_2',
         'arg1',
-        'arg2'
+        'arg2',
       );
 
       assert.equal(err.code, 'E_ERROR_2');
@@ -172,11 +170,11 @@ describe('YHTTPError', () => {
       assert.deepEqual(err.params, ['arg1', 'arg2']);
       assert(
         -1 !== err.stack.indexOf('Error: E_ERROR'),
-        'Contains the original error.'
+        'Contains the original error.',
       );
       assert(
         -1 !== err.stack.indexOf('YHTTPError[400]: E_ERROR_2 (arg1, arg2)'),
-        'Contains the cast error.'
+        'Contains the cast error.',
       );
       assert.equal(err.name, err.toString());
     });
@@ -195,14 +193,14 @@ describe('YHTTPError', () => {
       assert.deepEqual(err.params, ['arg1', 'arg2', 'arg3', 'arg4']);
       assert(
         -1 !== err.stack.indexOf('YHTTPError[400]: E_ERROR (arg1, arg2)'),
-        'Contains the original error.'
+        'Contains the original error.',
       );
       assert(
         -1 !==
           err.stack.indexOf(
-            'YHTTPError[400]: E_ERROR_2 (arg1, arg2, arg3, arg4)'
+            'YHTTPError[400]: E_ERROR_2 (arg1, arg2, arg3, arg4)',
           ),
-        'Contains the cast error.'
+        'Contains the cast error.',
       );
       assert.equal(err.name, err.toString());
     });
@@ -214,12 +212,12 @@ describe('YHTTPError', () => {
           401,
           'E_ERROR_2',
           'arg2.1',
-          'arg2.2'
+          'arg2.2',
         ),
         402,
         'E_ERROR_3',
         'arg3.1',
-        'arg3.2'
+        'arg3.2',
       );
 
       assert.equal(err.code, 'E_ERROR_3');
@@ -235,21 +233,21 @@ describe('YHTTPError', () => {
       ]);
       assert(
         -1 !== err.stack.indexOf('YHTTPError[400]: E_ERROR_1 (arg1.1, arg1.2)'),
-        'Contains the first error.'
+        'Contains the first error.',
       );
       assert(
         -1 !==
           err.stack.indexOf(
-            'YHTTPError[401]: E_ERROR_2 (arg1.1, arg1.2, arg2.1, arg2.2)'
+            'YHTTPError[401]: E_ERROR_2 (arg1.1, arg1.2, arg2.1, arg2.2)',
           ),
-        'Contains the second error.'
+        'Contains the second error.',
       );
       assert(
         -1 !==
           err.stack.indexOf(
-            'YHTTPError[402]: E_ERROR_3 (arg1.1, arg1.2, arg2.1, arg2.2, arg3.1, arg3.2)'
+            'YHTTPError[402]: E_ERROR_3 (arg1.1, arg1.2, arg2.1, arg2.2, arg3.1, arg3.2)',
           ),
-        'Contains the third error.'
+        'Contains the third error.',
       );
       assert.equal(err.name, err.toString());
     });

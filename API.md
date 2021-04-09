@@ -2,7 +2,7 @@
 <a name="YHTTPError"></a>
 
 ## YHTTPError ⇐ <code>Error</code>
-Class representing an HTTP Error
+Class representing an HTTP Error with extra debug informations
 
 **Kind**: global class  
 **Extends**: <code>Error</code>, <code>YError</code>  
@@ -16,8 +16,8 @@ Class representing an HTTP Error
 <a name="new_YHTTPError_new"></a>
 
 ### new YHTTPError(httpCode, [errorCode], [...params])
-Creates a new YHTTPError with an HTTP error `code`, `msg`
- as a message and `args` as debug values.
+Creates a new YHTTPError with an HTTP error code, an
+ error code and some params as debug values.
 
 
 | Param | Type | Default | Description |
@@ -29,8 +29,8 @@ Creates a new YHTTPError with an HTTP error `code`, `msg`
 <a name="YHTTPError.wrap"></a>
 
 ### YHTTPError.wrap(err, httpCode, [errorCode], [...params]) ⇒ [<code>YHTTPError</code>](#YHTTPError)
-Wraps any error and output a YHTTPError with an HTTP error
- `code`, `msg` as its message and `args` as debug values.
+Wraps any error and output a YHTTPError with an HTTP
+ error code, an error code and some params as debug values.
 
 **Kind**: static method of [<code>YHTTPError</code>](#YHTTPError)  
 **Returns**: [<code>YHTTPError</code>](#YHTTPError) - The wrapped error  
@@ -46,7 +46,8 @@ Wraps any error and output a YHTTPError with an HTTP error
 
 ### YHTTPError.cast(err, httpCode, [errorCode], [...params]) ⇒ [<code>YHTTPError</code>](#YHTTPError)
 Return YHTTPError as is or wraps any other error and output
- a YHTTPError with `msg` as its message and `args` as debug values.
+ a YHTTPError with an HTTP error code, an
+ error code and some params as debug values.
 
 **Kind**: static method of [<code>YHTTPError</code>](#YHTTPError)  
 **Returns**: [<code>YHTTPError</code>](#YHTTPError) - The wrapped error  
@@ -61,8 +62,8 @@ Return YHTTPError as is or wraps any other error and output
 <a name="YHTTPError.bump"></a>
 
 ### YHTTPError.bump(err, httpCode, [errorCode], [...params]) ⇒ [<code>YHTTPError</code>](#YHTTPError)
-Same than `YHTTPError.wrap()` but preserves the code,
- the message and the debug values of the error if it is
+Same than `YHTTPError.wrap()` but preserves the HTTP code,
+ the error code and the debug values of the error if it is
  already an instance of the YHTTPError constructor.
 
 **Kind**: static method of [<code>YHTTPError</code>](#YHTTPError)  

@@ -1,17 +1,15 @@
-'use strict';
-
-const os = require('os');
-const YError = require('yerror');
+import os from 'os';
+import YError from 'yerror';
 
 /**
- * Class representing an HTTP Error
+ * Class representing an HTTP Error with extra debug informations
  * @extends Error
  * @extends YError
  */
 class YHTTPError extends YError {
   /**
-   * Creates a new YHTTPError with an HTTP error `code`, `msg`
-   *  as a message and `args` as debug values.
+   * Creates a new YHTTPError with an HTTP error code, an
+   *  error code and some params as debug values.
    * @param {number} httpCode
    * The HTTP error code corresponding to the actual error
    * @param {string} [errorCode = 'E_UNEXPECTED']
@@ -48,8 +46,8 @@ class YHTTPError extends YError {
 }
 
 /**
- * Wraps any error and output a YHTTPError with an HTTP error
- *  `code`, `msg` as its message and `args` as debug values.
+ * Wraps any error and output a YHTTPError with an HTTP
+ *  error code, an error code and some params as debug values.
  * @param {Error} err
  * The error to wrap
  * @param {number} httpCode
@@ -87,7 +85,8 @@ YHTTPError.wrap = function httpErrorWrap(err, httpCode, errorCode, ...params) {
 
 /**
  * Return YHTTPError as is or wraps any other error and output
- *  a YHTTPError with `msg` as its message and `args` as debug values.
+ *  a YHTTPError with an HTTP error code, an
+ *  error code and some params as debug values.
  * @param {Error} err
  * The error to cast
  * @param {number} httpCode
@@ -107,8 +106,8 @@ YHTTPError.cast = function httpErrorCast(err, ...params) {
 };
 
 /**
- * Same than `YHTTPError.wrap()` but preserves the code,
- *  the message and the debug values of the error if it is
+ * Same than `YHTTPError.wrap()` but preserves the HTTP code,
+ *  the error code and the debug values of the error if it is
  *  already an instance of the YHTTPError constructor.
  * @param {Error} err
  * The error to bump
@@ -148,4 +147,4 @@ function _looksLikeAYHTTPErrorCode(str) {
   return /^([A-Z0-9_]+)$/.test(str);
 }
 
-module.exports = YHTTPError;
+export default YHTTPError;

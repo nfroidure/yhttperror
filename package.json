@@ -2,13 +2,15 @@
   "name": "yhttperror",
   "version": "5.0.2",
   "description": "Better HTTP errors for your NodeJS server.",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "dist/index",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "metapak": {
     "configs": [
       "main",
       "readme",
       "eslint",
+      "babel",
       "codeclimate",
       "mocha",
       "travis",
@@ -21,29 +23,32 @@
         "dist"
       ],
       "bundleFiles": [
-        "src/*.d.ts",
-        "src/*.js"
+        "dist",
+        "src"
       ]
     }
   },
   "scripts": {
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
+    "compile": "rimraf -f 'dist' && npm run compile:cjs && npm run compile:mjs",
+    "compile:cjs": "babel --env-name=cjs --out-dir=dist --source-maps=true src",
+    "compile:mjs": "babel --env-name=mjs --out-file-extension=.mjs --out-dir=dist --source-maps=true src",
     "cover": "nyc npm test && nyc report --reporter=html --reporter=text",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls && rm -rf ./coverage",
     "cz": "env NODE_ENV=${NODE_ENV:-cli} git cz",
     "doc": "echo \"# API\" > API.md; jsdoc2md src/*.js >> API.md && git add API.md",
     "lint": "eslint src/*.js",
     "metapak": "metapak",
-    "mocha": "mocha src/*.mocha.js",
-    "precz": "npm t && npm run lint && npm run metapak -- -s && npm run doc",
+    "mocha": "mocha --require '@babel/register' src/*.mocha.js",
+    "precz": "npm t && npm run lint && npm run metapak -- -s && npm run doc && npm run compile",
     "prettier": "prettier --write src/*.js",
-    "preversion": "npm t && npm run lint && npm run metapak -- -s && npm run doc",
+    "preversion": "npm t && npm run lint && npm run metapak -- -s && npm run doc && npm run compile",
     "test": "npm run mocha",
     "version": "npm run changelog"
   },
   "engines": {
-    "node": ">=8.12.0"
+    "node": ">=12.19.0"
   },
   "repository": {
     "type": "git",
@@ -65,26 +70,32 @@
     "url": "https://github.com/SimpliField/yhttperror/issues"
   },
   "devDependencies": {
-    "commitizen": "^4.0.3",
-    "conventional-changelog-cli": "^2.0.28",
-    "coveralls": "^3.0.5",
-    "cz-conventional-changelog": "^3.0.2",
-    "eslint": "^6.7.1",
-    "eslint-plugin-prettier": "^3.1.1",
-    "jsdoc-to-markdown": "^5.0.3",
-    "metapak": "^3.1.6",
-    "metapak-nfroidure": "9.7.4",
-    "mocha": "^6.2.0",
-    "nyc": "^14.1.1",
-    "prettier": "^1.19.1"
+    "@babel/cli": "^7.13.14",
+    "@babel/core": "^7.13.15",
+    "@babel/eslint-parser": "^7.13.14",
+    "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
+    "@babel/preset-env": "^7.13.15",
+    "@babel/register": "^7.13.14",
+    "commitizen": "^4.2.3",
+    "conventional-changelog-cli": "^2.1.1",
+    "coveralls": "^3.1.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.23.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jsdoc-to-markdown": "^7.0.1",
+    "metapak": "^4.0.0",
+    "metapak-nfroidure": "11.0.6",
+    "mocha": "^8.3.2",
+    "nyc": "^15.1.0",
+    "prettier": "^2.2.1"
   },
   "dependencies": {
-    "yerror": "^5.0.0"
+    "yerror": "^6.0.0"
   },
   "contributors": [],
   "files": [
-    "src/*.d.ts",
-    "src/*.js",
+    "dist",
+    "src",
     "LICENSE",
     "README.md",
     "CHANGELOG.md"
@@ -102,6 +113,12 @@
       "eslint",
       "eslint-config-prettier",
       "prettier",
+      "@babel/cli",
+      "@babel/core",
+      "@babel/register",
+      "@babel/preset-env",
+      "@babel/plugin-proposal-object-rest-spread",
+      "babel-eslint",
       "mocha",
       "coveralls",
       "nyc",
@@ -114,7 +131,7 @@
     ],
     "parserOptions": {
       "ecmaVersion": 2018,
-      "sourceType": "script",
+      "sourceType": "module",
       "modules": true
     },
     "env": {
@@ -134,8 +151,54 @@
     "semi": true,
     "printWidth": 80,
     "singleQuote": true,
-    "trailingComma": "es5",
+    "trailingComma": "all",
     "proseWrap": "always"
+  },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread"
+    ],
+    "presets": [
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "node": "12.19.0"
+          }
+        }
+      ]
+    ],
+    "env": {
+      "cjs": {
+        "presets": [
+          [
+            "@babel/env",
+            {
+              "targets": {
+                "node": "10"
+              },
+              "modules": "commonjs"
+            }
+          ]
+        ],
+        "comments": true
+      },
+      "mjs": {
+        "presets": [
+          [
+            "@babel/env",
+            {
+              "targets": {
+                "node": "12"
+              },
+              "modules": false
+            }
+          ]
+        ],
+        "comments": false
+      }
+    },
+    "sourceMaps": true
   },
   "nyc": {
     "exclude": [

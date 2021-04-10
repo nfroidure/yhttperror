@@ -1,6 +1,6 @@
 {
   "name": "yhttperror",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Better HTTP errors for your NodeJS server.",
   "main": "dist/index",
   "module": "dist/index.mjs",

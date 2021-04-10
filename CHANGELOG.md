@@ -1,3 +1,12 @@
+## [6.0.1](https://github.com/SimpliField/yhttperror/compare/v6.0.0...v6.0.1) (2021-04-10)
+
+
+### Bug Fixes
+
+* **types:** fix types declarations path ([a23c003](https://github.com/SimpliField/yhttperror/commit/a23c003d8d08f5b44c6142f911d492319f1c3851))
+
+
+
 # [6.0.0](https://github.com/SimpliField/yhttperror/compare/v5.0.2...v6.0.0) (2021-04-09)
 
 

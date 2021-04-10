@@ -4,7 +4,7 @@
   "description": "Better HTTP errors for your NodeJS server.",
   "main": "dist/index",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "src/index.d.ts",
   "metapak": {
     "configs": [
       "main",

@@ -10,11 +10,6 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/yhttperror/blob/master/LICENSE)
 [![Build status](https://travis-ci.com/git://github.com/SimpliField/yhttperror.git.svg?branch=master)](https://travis-ci.com/github/git://github.com/SimpliField/yhttperror.git)
 [![Coverage Status](https://coveralls.io/repos/github/git://github.com/SimpliField/yhttperror.git/badge.svg?branch=master)](https://coveralls.io/github/git://github.com/SimpliField/yhttperror.git?branch=master)
-[![NPM version](https://badge.fury.io/js/yhttperror.svg)](https://npmjs.org/package/yhttperror)
-[![Dependency Status](https://david-dm.org/nfroidure/yhttperror.svg)](https://david-dm.org/nfroidure/yhttperror)
-[![devDependency Status](https://david-dm.org/nfroidure/yhttperror/dev-status.svg)](https://david-dm.org/nfroidure/yhttperror#info=devDependencies)
-[![Package Quality](https://npm.packagequality.com/shield/yhttperror.svg)](https://packagequality.com/#?package=yhttperror)
-[![Code Climate](https://codeclimate.com/github/git://github.com/SimpliField/yhttperror.git.svg)](https://codeclimate.com/github/git://github.com/SimpliField/yhttperror.git)
 
 
 [//]: # (::contents:start)

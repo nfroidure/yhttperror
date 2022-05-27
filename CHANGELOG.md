@@ -1,3 +1,12 @@
+# [6.1.0](https://github.com/nfroidure/yhttperror/compare/v6.0.3...v6.1.0) (2022-05-27)
+
+
+### Features
+
+* **api:** add prop export for ESM compatibility ([82b625a](https://github.com/nfroidure/yhttperror/commit/82b625a1cf65a40d7e042813931b4edcaf291510))
+
+
+
 ## [6.0.3](https://github.com/nfroidure/yhttperror/compare/v6.0.2...v6.0.3) (2022-05-26)
 
 

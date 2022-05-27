@@ -1,3 +1,12 @@
+## [6.1.1](https://github.com/nfroidure/yhttperror/compare/v6.1.0...v6.1.1) (2022-05-27)
+
+
+### Bug Fixes
+
+* **api:** add forgotten export ([f454896](https://github.com/nfroidure/yhttperror/commit/f454896c115e04def7d11f235c9fdc9a91b8bfc8))
+
+
+
 # [6.1.0](https://github.com/nfroidure/yhttperror/compare/v6.0.3...v6.1.0) (2022-05-27)
 
 

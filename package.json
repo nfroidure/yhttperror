@@ -82,14 +82,14 @@
     "eslint": "^8.16.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jsdoc-to-markdown": "^7.1.1",
-    "metapak": "^4.0.3",
+    "metapak": "^4.0.4",
     "metapak-nfroidure": "11.2.1",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "prettier": "^2.6.2"
   },
   "dependencies": {
-    "yerror": "^6.0.2"
+    "yerror": "^6.1.1"
   },
   "contributors": [],
   "files": [

@@ -29,4 +29,5 @@ declare class YHTTPError extends YError {
   ): YHTTPError;
 }
 
+export { YHTTPError };
 export default YHTTPError;

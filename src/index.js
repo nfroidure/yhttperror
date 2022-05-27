@@ -1,5 +1,5 @@
 import os from 'os';
-import YError from 'yerror';
+import { YError } from 'yerror';
 
 /**
  * Class representing an HTTP Error with extra debug informations

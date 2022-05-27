@@ -147,4 +147,5 @@ function _looksLikeAYHTTPErrorCode(str) {
   return /^([A-Z0-9_]+)$/.test(str);
 }
 
+export { YHTTPError };
 export default YHTTPError;

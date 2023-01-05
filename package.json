@@ -1,10 +1,4 @@
 {
-  "name": "yhttperror",
-  "version": "6.1.1",
-  "description": "Better HTTP errors for your NodeJS server.",
-  "main": "dist/index",
-  "module": "dist/index.mjs",
-  "types": "src/index.d.ts",
   "metapak": {
     "configs": [
       "main",
@@ -27,6 +21,12 @@
       ]
     }
   },
+  "name": "yhttperror",
+  "version": "6.1.1",
+  "description": "Better HTTP errors for your NodeJS server.",
+  "main": "dist/index",
+  "module": "dist/index.mjs",
+  "types": "src/index.d.ts",
   "scripts": {
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
@@ -47,7 +47,7 @@
     "version": "npm run changelog"
   },
   "engines": {
-    "node": ">=12.19.0"
+    "node": ">=16.15.0"
   },
   "repository": {
     "type": "git",
@@ -75,21 +75,22 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.18.0",
     "@babel/preset-env": "^7.18.2",
     "@babel/register": "^7.17.7",
-    "commitizen": "^4.2.4",
+    "commitizen": "^4.2.5",
     "conventional-changelog-cli": "^2.2.2",
     "coveralls": "^3.1.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.16.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "jsdoc-to-markdown": "^7.1.1",
-    "metapak": "^4.0.4",
-    "metapak-nfroidure": "11.2.1",
+    "metapak": "^4.0.6",
+    "metapak-nfroidure": "13.0.0",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
-    "prettier": "^2.6.2"
+    "prettier": "^2.7.1"
   },
   "dependencies": {
-    "yerror": "^6.1.1"
+    "yerror": "^6.2.1"
   },
   "contributors": [],
   "files": [
@@ -111,6 +112,7 @@
       "conventional-changelog-cli",
       "eslint",
       "eslint-config-prettier",
+      "eslint-plugin-prettier",
       "prettier",
       "@babel/cli",
       "@babel/core",
@@ -126,7 +128,8 @@
   },
   "eslintConfig": {
     "extends": [
-      "eslint:recommended"
+      "eslint:recommended",
+      "plugin:prettier/recommended"
     ],
     "parserOptions": {
       "ecmaVersion": 2018,
@@ -162,7 +165,7 @@
         "@babel/env",
         {
           "targets": {
-            "node": "12.19.0"
+            "node": "16.15.0"
           }
         }
       ]

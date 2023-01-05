@@ -1,3 +1,7 @@
+## [6.1.2](https://github.com/nfroidure/yhttperror/compare/v6.1.1...v6.1.2) (2023-01-05)
+
+
+
 ## [6.1.1](https://github.com/nfroidure/yhttperror/compare/v6.1.0...v6.1.1) (2022-05-27)
 
 

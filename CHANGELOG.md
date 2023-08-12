@@ -1,3 +1,12 @@
+# [7.0.0](https://github.com/nfroidure/yhttperror/compare/v6.1.2...v7.0.0) (2023-08-12)
+
+
+### Bug Fixes
+
+* **ci:** fix the CI run ([3609313](https://github.com/nfroidure/yhttperror/commit/360931362c0d55f7d55a75e7c3a9d1f93097298a))
+
+
+
 ## [6.1.2](https://github.com/nfroidure/yhttperror/compare/v6.1.1...v6.1.2) (2023-01-05)
 
 

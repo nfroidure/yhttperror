@@ -1,9 +1,10 @@
+import { describe, test } from '@jest/globals';
 import assert from 'assert';
-import YHTTPError from './index';
+import YHTTPError from './index.js';
 
 describe('YHTTPError', () => {
   describe('.__constructor', () => {
-    it('Should work', () => {
+    test('Should work', () => {
       const err = new YHTTPError(400, 'E_ERROR', 'arg1', 'arg2');
 
       assert.equal(err.code, 'E_ERROR');
@@ -14,7 +15,7 @@ describe('YHTTPError', () => {
       assert.deepEqual(err.headers, {});
     });
 
-    it('Should work without code', () => {
+    test('Should work without code', () => {
       const err = new YHTTPError();
 
       assert.equal(err.code, 'E_UNEXPECTED');
@@ -24,7 +25,7 @@ describe('YHTTPError', () => {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with params', () => {
+    test('Should work with params', () => {
       const err = new YHTTPError(302, 'E_ERROR', 'arg1', 'arg2');
 
       assert.equal(err.code, 'E_ERROR');
@@ -36,7 +37,7 @@ describe('YHTTPError', () => {
   });
 
   describe('.cast()', () => {
-    it('Should work with standard errors and a message', () => {
+    test('Should work with standard errors and a message', () => {
       const err = YHTTPError.cast(new Error('This is an error!'));
 
       assert.equal(err.code, 'E_UNEXPECTED');
@@ -44,12 +45,12 @@ describe('YHTTPError', () => {
       assert.equal(err.httpCode, 500);
       assert.deepEqual(err.params, ['This is an error!']);
       assert(
-        -1 !== err.stack.indexOf('Error: This is an error!'),
+        -1 !== (err.stack || '').indexOf('Error: This is an error!'),
         'Contains the original error.',
       );
       assert(
         -1 !==
-          err.stack.indexOf(
+          (err.stack || '').indexOf(
             'YHTTPError[500]: E_UNEXPECTED (This is an error!)',
           ),
         'Contains the cast error.',
@@ -57,7 +58,7 @@ describe('YHTTPError', () => {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should let YHTTPError instances pass through', () => {
+    test('Should let YHTTPError instances pass through', () => {
       const err = YHTTPError.cast(
         new YHTTPError(400, 'E_ERROR_1', 'arg1.1', 'arg1.2'),
         500,
@@ -70,11 +71,17 @@ describe('YHTTPError', () => {
       assert.equal(err.httpCode, 400);
       assert.deepEqual(err.params, ['arg1.1', 'arg1.2']);
       assert(
-        -1 !== err.stack.indexOf('YHTTPError[400]: E_ERROR_1 (arg1.1, arg1.2)'),
+        -1 !==
+          (err.stack || '').indexOf(
+            'YHTTPError[400]: E_ERROR_1 (arg1.1, arg1.2)',
+          ),
         'Contains the original error.',
       );
       assert(
-        -1 === err.stack.indexOf('YHTTPError[500]: E_ERROR_2 (arg2.1, arg2.2)'),
+        -1 ===
+          (err.stack || '').indexOf(
+            'YHTTPError[500]: E_ERROR_2 (arg2.1, arg2.2)',
+          ),
         "Doesn't contain the cast error.",
       );
       assert.equal(err.name, err.toString());
@@ -82,12 +89,12 @@ describe('YHTTPError', () => {
   });
 
   describe('.bump()', () => {
-    it('Should work with YHTTPError like errors, an error code and params', () => {
+    test('Should work with YHTTPError like errors, an error code and params', () => {
       const baseErr = new Error('E_ERROR');
 
-      baseErr.code = 'E_ERROR';
-      baseErr.params = ['baseParam1', 'baseParam2'];
-      baseErr.httpCode = 418;
+      (baseErr as YHTTPError).code = 'E_ERROR';
+      (baseErr as YHTTPError).params = ['baseParam1', 'baseParam2'];
+      (baseErr as YHTTPError).httpCode = 418;
 
       const err = YHTTPError.bump(baseErr, 400, 'E_ERROR_2', 'arg1', 'arg2');
 
@@ -101,12 +108,12 @@ describe('YHTTPError', () => {
         'arg2',
       ]);
       assert(
-        -1 !== err.stack.indexOf('Error: E_ERROR'),
+        -1 !== (err.stack || '').indexOf('Error: E_ERROR'),
         'Contains the original error.',
       );
       assert(
         -1 !==
-          err.stack.indexOf(
+          (err.stack || '').indexOf(
             'YHTTPError[418]: E_ERROR_2 (baseParam1, baseParam2, arg1, arg2)',
           ),
         'Contains the bumped error.',
@@ -116,7 +123,7 @@ describe('YHTTPError', () => {
   });
 
   describe('.wrap()', () => {
-    it('Should work with standard errors and a message', () => {
+    test('Should work with standard errors and a message', () => {
       const err = YHTTPError.wrap(new Error('This is an error!'));
 
       assert.equal(err.code, 'E_UNEXPECTED');
@@ -124,12 +131,12 @@ describe('YHTTPError', () => {
       assert.equal(err.httpCode, 500);
       assert.deepEqual(err.params, ['This is an error!']);
       assert(
-        -1 !== err.stack.indexOf('Error: This is an error!'),
+        -1 !== (err.stack || '').indexOf('Error: This is an error!'),
         'Contains the original error.',
       );
       assert(
         -1 !==
-          err.stack.indexOf(
+          (err.stack || '').indexOf(
             'YHTTPError[500]: E_UNEXPECTED (This is an error!)',
           ),
         'Contains the wrapped error.',
@@ -137,7 +144,7 @@ describe('YHTTPError', () => {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with standard errors and an error code', () => {
+    test('Should work with standard errors and an error code', () => {
       const err = YHTTPError.wrap(new Error('E_ERROR'));
 
       assert.equal(err.code, 'E_ERROR');
@@ -145,17 +152,17 @@ describe('YHTTPError', () => {
       assert.equal(err.httpCode, 500);
       assert.deepEqual(err.params, []);
       assert(
-        -1 !== err.stack.indexOf('Error: E_ERROR'),
+        -1 !== (err.stack || '').indexOf('Error: E_ERROR'),
         'Contains the original error.',
       );
       assert(
-        -1 !== err.stack.indexOf('YHTTPError[500]: E_ERROR ()'),
+        -1 !== (err.stack || '').indexOf('YHTTPError[500]: E_ERROR ()'),
         'Contains the cast error.',
       );
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with standard errors, an error code and params', () => {
+    test('Should work with standard errors, an error code and params', () => {
       const err = YHTTPError.wrap(
         new Error('E_ERROR'),
         400,
@@ -169,17 +176,18 @@ describe('YHTTPError', () => {
       assert.equal(err.httpCode, 400);
       assert.deepEqual(err.params, ['arg1', 'arg2']);
       assert(
-        -1 !== err.stack.indexOf('Error: E_ERROR'),
+        -1 !== (err.stack || '').indexOf('Error: E_ERROR'),
         'Contains the original error.',
       );
       assert(
-        -1 !== err.stack.indexOf('YHTTPError[400]: E_ERROR_2 (arg1, arg2)'),
+        -1 !==
+          (err.stack || '').indexOf('YHTTPError[400]: E_ERROR_2 (arg1, arg2)'),
         'Contains the cast error.',
       );
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with HTTP errors and concat their params', () => {
+    test('Should work with HTTP errors and concat their params', () => {
       const baseErr = new YHTTPError(400, 'E_ERROR', 'arg1', 'arg2');
 
       baseErr.headers = { 'A-Header': 'A value' };
@@ -192,12 +200,13 @@ describe('YHTTPError', () => {
       assert.equal(err.headers, baseErr.headers);
       assert.deepEqual(err.params, ['arg1', 'arg2', 'arg3', 'arg4']);
       assert(
-        -1 !== err.stack.indexOf('YHTTPError[400]: E_ERROR (arg1, arg2)'),
+        -1 !==
+          (err.stack || '').indexOf('YHTTPError[400]: E_ERROR (arg1, arg2)'),
         'Contains the original error.',
       );
       assert(
         -1 !==
-          err.stack.indexOf(
+          (err.stack || '').indexOf(
             'YHTTPError[400]: E_ERROR_2 (arg1, arg2, arg3, arg4)',
           ),
         'Contains the cast error.',
@@ -205,7 +214,7 @@ describe('YHTTPError', () => {
       assert.equal(err.name, err.toString());
     });
 
-    it('Should work with several wrapped errors', () => {
+    test('Should work with several wrapped errors', () => {
       const err = YHTTPError.wrap(
         YHTTPError.wrap(
           new YHTTPError(400, 'E_ERROR_1', 'arg1.1', 'arg1.2'),
@@ -232,19 +241,22 @@ describe('YHTTPError', () => {
         'arg3.2',
       ]);
       assert(
-        -1 !== err.stack.indexOf('YHTTPError[400]: E_ERROR_1 (arg1.1, arg1.2)'),
+        -1 !==
+          (err.stack || '').indexOf(
+            'YHTTPError[400]: E_ERROR_1 (arg1.1, arg1.2)',
+          ),
         'Contains the first error.',
       );
       assert(
         -1 !==
-          err.stack.indexOf(
+          (err.stack || '').indexOf(
             'YHTTPError[401]: E_ERROR_2 (arg1.1, arg1.2, arg2.1, arg2.2)',
           ),
         'Contains the second error.',
       );
       assert(
         -1 !==
-          err.stack.indexOf(
+          (err.stack || '').indexOf(
             'YHTTPError[402]: E_ERROR_3 (arg1.1, arg1.2, arg2.1, arg2.2, arg3.1, arg3.2)',
           ),
         'Contains the third error.',

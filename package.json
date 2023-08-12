@@ -4,14 +4,15 @@
       "main",
       "readme",
       "eslint",
-      "babel",
+      "tsesm",
       "codeclimate",
-      "mocha",
+      "jest",
       "jsdocs"
     ],
     "data": {
-      "testsFiles": "src/*.mocha.js",
-      "files": "src/*.js",
+      "files": "'src/**/*.ts'",
+      "testsFiles": "'src/**/*.test.ts'",
+      "distFiles": "'dist/**/*.js'",
       "ignore": [
         "dist"
       ],
@@ -24,30 +25,27 @@
   "name": "yhttperror",
   "version": "6.1.2",
   "description": "Better HTTP errors for your NodeJS server.",
-  "main": "dist/index",
-  "module": "dist/index.mjs",
-  "types": "src/index.d.ts",
   "scripts": {
+    "build": "rimraf 'dist' && tsc --outDir dist",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
-    "compile": "rimraf -f 'dist' && npm run compile:cjs && npm run compile:mjs",
-    "compile:cjs": "babel --env-name=cjs --out-dir=dist --source-maps=true src",
-    "compile:mjs": "babel --env-name=mjs --out-file-extension=.mjs --out-dir=dist --source-maps=true src",
-    "cover": "nyc npm test && nyc report --reporter=html --reporter=text",
-    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls && rm -rf ./coverage",
+    "cover": "npm run jest -- --coverage",
+    "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "cz": "env NODE_ENV=${NODE_ENV:-cli} git cz",
-    "doc": "echo \"# API\" > API.md; jsdoc2md src/*.js >> API.md && git add API.md",
-    "lint": "eslint src/*.js",
+    "doc": "echo \"# API\" > API.md; jsdoc2md 'dist/**/*.js' >> API.md && git add API.md",
+    "jest": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest",
+    "lint": "eslint 'src/**/*.ts'",
     "metapak": "metapak",
-    "mocha": "mocha --require '@babel/register' src/*.mocha.js",
-    "precz": "npm t && npm run lint && npm run metapak -- -s && npm run doc && npm run compile",
-    "prettier": "prettier --write src/*.js",
-    "preversion": "npm t && npm run lint && npm run metapak -- -s && npm run doc && npm run compile",
-    "test": "npm run mocha",
+    "precz": "npm t && npm run lint && npm run build && npm run doc && npm run metapak -- -s",
+    "prettier": "prettier --write 'src/**/*.ts'",
+    "preversion": "npm t && npm run lint && npm run build && npm run doc && npm run metapak -- -s",
+    "rebuild": "swc ./src -s -d dist -C jsc.target=es2022",
+    "test": "echo \"WARNING: No tests specified\" && npm run jest",
+    "type-check": "tsc --pretty --noEmit",
     "version": "npm run changelog"
   },
   "engines": {
-    "node": ">=16.15.0"
+    "node": ">=18.16.0"
   },
   "repository": {
     "type": "git",
@@ -69,28 +67,29 @@
     "url": "https://github.com/nfroidure/yhttperror/issues"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.2",
-    "@babel/eslint-parser": "^7.18.2",
-    "@babel/plugin-proposal-object-rest-spread": "^7.18.0",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/register": "^7.17.7",
-    "commitizen": "^4.2.5",
-    "conventional-changelog-cli": "^2.2.2",
+    "@swc/cli": "^0.1.62",
+    "@swc/core": "^1.3.76",
+    "@swc/helpers": "^0.5.1",
+    "@swc/jest": "^0.2.28",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "commitizen": "^4.3.0",
+    "conventional-changelog-cli": "^3.0.0",
     "coveralls": "^3.1.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.23.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "jsdoc-to-markdown": "^7.1.1",
-    "metapak": "^4.0.6",
-    "metapak-nfroidure": "13.0.0",
-    "mocha": "^10.0.0",
-    "nyc": "^15.1.0",
-    "prettier": "^2.7.1"
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.6.2",
+    "jsdoc-to-markdown": "^8.0.0",
+    "metapak": "^5.1.3",
+    "metapak-nfroidure": "15.0.0",
+    "prettier": "^3.0.1",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
-    "yerror": "^6.2.1"
+    "yerror": "^7.0.0"
   },
   "contributors": [],
   "files": [
@@ -111,29 +110,32 @@
       "cz-conventional-changelog",
       "conventional-changelog-cli",
       "eslint",
+      "prettier",
       "eslint-config-prettier",
       "eslint-plugin-prettier",
-      "prettier",
-      "@babel/cli",
-      "@babel/core",
-      "@babel/register",
-      "@babel/preset-env",
-      "@babel/plugin-proposal-object-rest-spread",
-      "babel-eslint",
-      "mocha",
+      "@typescript-eslint/eslint-plugin",
+      "@typescript-eslint/parser",
+      "typescript",
+      "rimraf",
+      "@swc/cli",
+      "@swc/core",
+      "@swc/helpers",
+      "jest",
       "coveralls",
-      "nyc",
+      "@swc/jest",
       "jsdoc-to-markdown"
     ]
   },
   "eslintConfig": {
     "extends": [
       "eslint:recommended",
-      "plugin:prettier/recommended"
+      "plugin:prettier/recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
     ],
     "parserOptions": {
       "ecmaVersion": 2018,
-      "sourceType": "module",
+      "sourceType": "script",
       "modules": true
     },
     "env": {
@@ -147,7 +149,11 @@
     ],
     "rules": {
       "prettier/prettier": "error"
-    }
+    },
+    "parser": "@typescript-eslint/parser",
+    "ignorePatterns": [
+      "*.d.ts"
+    ]
   },
   "prettier": {
     "semi": true,
@@ -206,5 +212,33 @@
     "exclude": [
       "src/*.mocha.js"
     ]
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "jest": {
+    "coverageReporters": [
+      "lcov"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": [
+        "@swc/jest",
+        {}
+      ]
+    },
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "(.+)\\.js": "$1"
+    },
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "prettierPath": null
   }
 }

@@ -7,8 +7,8 @@
 # yhttperror
 > Better HTTP errors for your NodeJS server.
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/yhttperror/blob/master/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/git://github.com/nfroidure/yhttperror.git/badge.svg?branch=master)](https://coveralls.io/github/git://github.com/nfroidure/yhttperror.git?branch=master)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/yhttperror/blob/main/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/git://github.com/nfroidure/yhttperror.git/badge.svg?branch=main)](https://coveralls.io/github/git://github.com/nfroidure/yhttperror.git?branch=main)
 
 
 [//]: # (::contents:start)
@@ -169,4 +169,4 @@ Same than `YHTTPError.wrap()` but preserves the HTTP code,
 - [Nicolas Froidure (formerly at Simplifield)](http://insertafter.com/en/index.html)
 
 # License
-[MIT](https://github.com/nfroidure/yhttperror/blob/master/LICENSE)
+[MIT](https://github.com/nfroidure/yhttperror/blob/main/LICENSE)

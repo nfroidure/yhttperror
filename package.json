@@ -7,6 +7,7 @@
       "tsesm",
       "codeclimate",
       "jest",
+      "ghactions",
       "jsdocs"
     ],
     "data": {
@@ -161,57 +162,6 @@
     "singleQuote": true,
     "trailingComma": "all",
     "proseWrap": "always"
-  },
-  "babel": {
-    "plugins": [
-      "@babel/plugin-proposal-object-rest-spread"
-    ],
-    "presets": [
-      [
-        "@babel/env",
-        {
-          "targets": {
-            "node": "16.15.0"
-          }
-        }
-      ]
-    ],
-    "env": {
-      "cjs": {
-        "presets": [
-          [
-            "@babel/env",
-            {
-              "targets": {
-                "node": "10"
-              },
-              "modules": "commonjs"
-            }
-          ]
-        ],
-        "comments": true
-      },
-      "mjs": {
-        "presets": [
-          [
-            "@babel/env",
-            {
-              "targets": {
-                "node": "12"
-              },
-              "modules": false
-            }
-          ]
-        ],
-        "comments": false
-      }
-    },
-    "sourceMaps": true
-  },
-  "nyc": {
-    "exclude": [
-      "src/*.mocha.js"
-    ]
   },
   "type": "module",
   "main": "dist/index.js",

@@ -1,4 +1,4 @@
-import os from 'os';
+import os from 'node:os';
 import { YError } from 'yerror';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,7 +11,7 @@ type YHTTPErrorParams = any;
  */
 class YHTTPError extends YError {
   httpCode: number;
-  headers: { [name: string]: string };
+  headers: { [name: string]: string | string[] };
 
   /**
    * Creates a new YHTTPError with an HTTP error code, an
@@ -189,4 +189,3 @@ function _looksLikeAYHTTPErrorCode(str) {
 }
 
 export { YHTTPError };
-export default YHTTPError;

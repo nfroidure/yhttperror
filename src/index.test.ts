@@ -1,6 +1,6 @@
 import { describe, test } from '@jest/globals';
 import assert from 'assert';
-import YHTTPError from './index.js';
+import { YHTTPError } from './index.js';
 
 describe('YHTTPError', () => {
   describe('.__constructor', () => {

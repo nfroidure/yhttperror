@@ -24,7 +24,7 @@
     }
   },
   "name": "yhttperror",
-  "version": "8.0.0",
+  "version": "8.1.0",
   "description": "Better HTTP errors for your NodeJS server.",
   "scripts": {
     "build": "rimraf 'dist' && tsc --outDir dist",

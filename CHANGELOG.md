@@ -1,3 +1,12 @@
+# [8.1.0](https://github.com/nfroidure/yhttperror/compare/v8.0.0...v8.1.0) (2025-03-12)
+
+
+### Features
+
+* **core:** allow multivalued headers ([bddb2ca](https://github.com/nfroidure/yhttperror/commit/bddb2ca088920f65b3c167a7b34076b4aa609605))
+
+
+
 # [8.0.0](https://github.com/nfroidure/yhttperror/compare/v7.0.0...v8.0.0) (2023-08-16)
 
 

@@ -8,7 +8,6 @@
 > Better HTTP errors for your NodeJS server.
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/yhttperror/blob/main/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/git://github.com/nfroidure/yhttperror.git/badge.svg?branch=main)](https://coveralls.io/github/git://github.com/nfroidure/yhttperror.git?branch=main)
 
 
 [//]: # (::contents:start)

@@ -1,17 +1,17 @@
-import os from 'node:os';
-import { YError } from 'yerror';
+import { EOL } from 'node:os';
+import { looksLikeAYErrorCode, YError, type YErrorDebugValue } from 'yerror';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type YHTTPErrorParams = any;
+export type YHTTPErrorCode = number;
+export type YHTTPErrorHeaders = Record<string, string | string[]>;
 
 /**
  * Class representing an HTTP Error with extra debug informations
  * @extends Error
  * @extends YError
  */
-class YHTTPError extends YError {
-  httpCode: number;
-  headers: { [name: string]: string | string[] };
+class YHTTPError<T = YErrorDebugValue> extends YError<T> {
+  httpCode: YHTTPErrorCode = 500;
+  headers: YHTTPErrorHeaders = {};
 
   /**
    * Creates a new YHTTPError with an HTTP error code, an
@@ -25,31 +25,28 @@ class YHTTPError extends YError {
    */
 
   constructor(
-    httpCode = 500,
+    httpCode: YHTTPErrorCode = 500,
     errorCode?: string,
-    ...params: YHTTPErrorParams[]
+    debugValues: T[] = [],
+    headers: YHTTPErrorHeaders = {},
+    wrappedErrors: (Error | YError)[] = [],
   ) {
-    super(errorCode || 'E_UNEXPECTED', ...params);
+    super(errorCode || 'E_UNEXPECTED', debugValues, wrappedErrors);
 
     // Since we could not ask for a number for the moment,
     // we check the httpCode is a number here ¯\_(ツ)_/¯
     if ('number' !== typeof httpCode) {
-      throw new YError('E_BAD_HTTP_CODE', typeof httpCode, httpCode);
+      throw new YError('E_BAD_HTTP_CODE', [typeof httpCode, httpCode]);
     }
 
     this.httpCode = httpCode;
-    this.name =
-      YHTTPError.name +
-      '[' +
-      this.httpCode +
-      ']: ' +
-      this.code +
-      ' (' +
-      this.params.join(', ') +
-      ')';
-    this.headers = {};
+    this.headers = headers;
+    this.wrappedErrors = wrappedErrors;
+    this.name = this.toString();
 
-    Error.captureStackTrace(this, YHTTPError);
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, YHTTPError);
+    }
   }
 
   /**
@@ -67,39 +64,31 @@ class YHTTPError extends YError {
    * The wrapped error
    */
 
-  static wrap<E extends Error | YError | YHTTPError>(
-    err: E,
-    httpCode?: number | string,
+  static wrap<T = YErrorDebugValue>(
+    err: Error | YError | YHTTPError,
     errorCode?: string,
-    ...params: YHTTPErrorParams[]
+    debugValues: T[] = [],
+    httpCode?: number | string,
   ): YHTTPError {
-    const wrappedErrorIsACode = _looksLikeAYHTTPErrorCode(err.message);
-    const mergedParams = ((err as YError).params || []).concat(params);
+    const wrappedErrorIsACode = looksLikeAYErrorCode(err.message);
+    const wrappedErrors = (
+      'wrappedErrors' in err ? err.wrappedErrors : []
+    ).concat(err);
 
     if (!errorCode) {
       errorCode = wrappedErrorIsACode
         ? err.message
         : (err as YError).code || 'E_UNEXPECTED';
     }
-    if (err.message && !wrappedErrorIsACode) {
-      mergedParams.push(err.message);
-    }
 
     const httpError = new YHTTPError(
       typeof httpCode === 'number' ? httpCode : 500,
       errorCode,
-      ...mergedParams,
+      debugValues,
+      'headers' in err ? err.headers : {},
+      wrappedErrors,
     );
-    httpError.wrappedErrors = (
-      'wrappedErrors' in err ? err.wrappedErrors : []
-    ).concat(err);
-    if (httpError.wrappedErrors.length) {
-      httpError.stack =
-        httpError.wrappedErrors[httpError.wrappedErrors.length - 1].stack +
-        os.EOL +
-        httpError.stack;
-    }
-    httpError.headers = 'headers' in err ? err.headers : {};
+
     return httpError;
   }
 
@@ -119,16 +108,16 @@ class YHTTPError extends YError {
    * The wrapped error
    */
 
-  static cast<E extends Error | YError | YHTTPError>(
-    err: E,
-    httpCode?: number | string,
+  static cast<T = YErrorDebugValue>(
+    err: Error | YError | YHTTPError,
     errorCode?: string,
-    ...params: YHTTPErrorParams[]
+    debugValues: T[] = [],
+    httpCode?: number | string,
   ): YHTTPError {
-    if (_looksLikeAYHTTPError(err)) {
+    if (looksLikeAYHTTPError(err)) {
       return err as YHTTPError;
     }
-    return YHTTPError.wrap(err, httpCode, errorCode, ...params);
+    return YHTTPError.wrap(err, errorCode, debugValues, httpCode);
   }
 
   /**
@@ -146,46 +135,64 @@ class YHTTPError extends YError {
    * @return {YHTTPError}
    * The wrapped error
    */
-  static bump<E extends Error | YError | YHTTPError>(
-    err: E,
-    httpCode?: number | string,
+  static bump<T = YErrorDebugValue>(
+    err: Error | YError | YHTTPError,
     errorCode?: string,
-    ...params: YHTTPErrorParams[]
+    debugValues: T[] = [],
+    httpCode?: number | string,
   ): YHTTPError {
-    if (_looksLikeAYHTTPError(err)) {
+    if (looksLikeAYHTTPError(err)) {
       return YHTTPError.wrap(
         err,
-        (err as YHTTPError).httpCode,
         errorCode,
-        ...params,
+        debugValues,
+        (err as YHTTPError).httpCode,
       );
     }
-    return YHTTPError.wrap(err, httpCode, errorCode, ...params);
+    return YHTTPError.wrap(err, errorCode, debugValues, httpCode);
   }
 
   toString(): string {
-    return this.name;
+    let debugValuesAsString: string;
+    let headersAsString;
+
+    try {
+      debugValuesAsString = JSON.stringify(this.debugValues);
+    } catch {
+      debugValuesAsString = '<circular>';
+    }
+    try {
+      headersAsString = JSON.stringify(this.headers);
+    } catch {
+      headersAsString = '<circular>';
+    }
+
+    return `${
+      this.wrappedErrors.length
+        ? this.wrappedErrors[this.wrappedErrors.length - 1].stack + EOL
+        : ''
+    }${this.constructor.name}[${this.httpCode}]: ${this.code} (${debugValuesAsString}, ${headersAsString})`;
   }
 }
 
 // In order to keep compatibility through major versions
 // we have to make kind of a cross major version instanceof
-function _looksLikeAYHTTPError(err) {
-  return (
+export function looksLikeAYHTTPError(
+  err: Error | YError | YHTTPError,
+): err is YHTTPError {
+  return !!(
     err instanceof YHTTPError ||
     (err.constructor &&
       err.constructor.name &&
       err.constructor.name.endsWith('Error') &&
+      'code' in err &&
       'string' === typeof err.code &&
-      _looksLikeAYHTTPErrorCode(err.code) &&
+      looksLikeAYErrorCode(err.code) &&
+      'httpCode' in err &&
       'number' === typeof err.httpCode &&
-      err.params &&
-      err.params instanceof Array)
+      err.debugValues &&
+      err.debugValues instanceof Array)
   );
-}
-
-function _looksLikeAYHTTPErrorCode(str) {
-  return /^([A-Z0-9_]+)$/.test(str);
 }
 
 export { YHTTPError };

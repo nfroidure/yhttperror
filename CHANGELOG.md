@@ -1,3 +1,5 @@
+# [9.0.0](https://github.com/nfroidure/yhttperror/compare/v8.1.0...v9.0.0) (2026-03-25)
+
 # [8.1.0](https://github.com/nfroidure/yhttperror/compare/v8.0.0...v8.1.0) (2025-03-12)
 
 

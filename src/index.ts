@@ -9,7 +9,7 @@ export type YHTTPErrorHeaders = Record<string, string | string[]>;
  * @extends Error
  * @extends YError
  */
-class YHTTPError<T = YErrorDebugValue> extends YError<T> {
+class YHTTPError<T extends unknown[] = YErrorDebugValue> extends YError<T> {
   httpCode: YHTTPErrorCode = 500;
   headers: YHTTPErrorHeaders = {};
 
@@ -27,7 +27,7 @@ class YHTTPError<T = YErrorDebugValue> extends YError<T> {
   constructor(
     httpCode: YHTTPErrorCode = 500,
     errorCode?: string,
-    debugValues: T[] = [],
+    debugValues: T = [] as unknown as T,
     headers: YHTTPErrorHeaders = {},
     wrappedErrors: (Error | YError)[] = [],
   ) {
@@ -64,10 +64,10 @@ class YHTTPError<T = YErrorDebugValue> extends YError<T> {
    * The wrapped error
    */
 
-  static wrap<T = YErrorDebugValue>(
+  static wrap<T extends unknown[] = YErrorDebugValue>(
     err: Error | YError | YHTTPError,
     errorCode?: string,
-    debugValues: T[] = [],
+    debugValues: T = [] as unknown as T,
     httpCode?: number | string,
   ): YHTTPError {
     const wrappedErrorIsACode = looksLikeAYErrorCode(err.message);
@@ -108,10 +108,10 @@ class YHTTPError<T = YErrorDebugValue> extends YError<T> {
    * The wrapped error
    */
 
-  static cast<T = YErrorDebugValue>(
+  static cast<T extends unknown[] = YErrorDebugValue>(
     err: Error | YError | YHTTPError,
     errorCode?: string,
-    debugValues: T[] = [],
+    debugValues: T = [] as unknown as T,
     httpCode?: number | string,
   ): YHTTPError {
     if (looksLikeAYHTTPError(err)) {
@@ -135,10 +135,10 @@ class YHTTPError<T = YErrorDebugValue> extends YError<T> {
    * @return {YHTTPError}
    * The wrapped error
    */
-  static bump<T = YErrorDebugValue>(
+  static bump<T extends unknown[] = YErrorDebugValue>(
     err: Error | YError | YHTTPError,
     errorCode?: string,
-    debugValues: T[] = [],
+    debugValues: T = [] as unknown as T,
     httpCode?: number | string,
   ): YHTTPError {
     if (looksLikeAYHTTPError(err)) {

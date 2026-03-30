@@ -1,3 +1,10 @@
+## [9.0.1](https://github.com/nfroidure/yhttperror/compare/v9.0.0...v9.0.1) (2026-03-30)
+
+
+### Bug Fixes
+
+* **types:** fix types templates ([7957c59](https://github.com/nfroidure/yhttperror/commit/7957c599c52df3e0a8da943fdccc373017187a5d))
+
 # [9.0.0](https://github.com/nfroidure/yhttperror/compare/v8.1.0...v9.0.0) (2026-03-25)
 
 # [8.1.0](https://github.com/nfroidure/yhttperror/compare/v8.0.0...v8.1.0) (2025-03-12)

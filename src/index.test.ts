@@ -1,5 +1,6 @@
 import { describe, test, expect } from '@jest/globals';
 import { YHTTPError } from './index.js';
+import { printStackTrace } from 'yerror';
 
 describe('YHTTPError', () => {
   describe('.__constructor', () => {
@@ -8,7 +9,7 @@ describe('YHTTPError', () => {
 
       expect(err.code).toEqual('E_ERROR');
       expect(err.httpCode).toEqual(400);
-      expect(err.debugValues).toEqual(['arg1', 'arg2']);
+      expect(err.debug).toEqual(['arg1', 'arg2']);
       expect(err.toString()).toEqual(
         'YHTTPError[400]: E_ERROR (["arg1","arg2"], {})',
       );
@@ -21,7 +22,7 @@ describe('YHTTPError', () => {
 
       expect(err.code).toEqual('E_UNEXPECTED');
       expect(err.httpCode).toEqual(500);
-      expect(err.debugValues).toEqual([]);
+      expect(err.debug).toEqual([]);
       expect(err.toString()).toEqual('YHTTPError[500]: E_UNEXPECTED ([], {})');
       expect(err.name).toEqual(err.toString());
     });
@@ -31,7 +32,7 @@ describe('YHTTPError', () => {
 
       expect(err.code).toEqual('E_ERROR');
       expect(err.httpCode).toEqual(302);
-      expect(err.debugValues).toEqual(['arg1', 'arg2']);
+      expect(err.debug).toEqual(['arg1', 'arg2']);
       expect(err.toString()).toEqual(
         'YHTTPError[302]: E_ERROR (["arg1","arg2"], {})',
       );
@@ -44,15 +45,17 @@ describe('YHTTPError', () => {
       const err = YHTTPError.cast(new Error('This is an error!'));
 
       expect(err.code).toEqual('E_UNEXPECTED');
-      expect(err.wrappedErrors.length).toEqual(1);
+      expect(err.cause).toBeDefined();
       expect(err.httpCode).toEqual(500);
-      expect(err.debugValues).toEqual([]);
+      expect(err.debug).toEqual([]);
       expect(
-        -1 !== (err.stack || '').indexOf('Error: This is an error!'),
+        -1 !== printStackTrace(err).indexOf('Error: This is an error!'),
       ).toBeTruthy();
       expect(
         -1 !==
-          (err.stack || '').indexOf('YHTTPError[500]: E_UNEXPECTED ([], {})'),
+          printStackTrace(err).indexOf(
+            'YHTTPError[500]: E_UNEXPECTED ([], {})',
+          ),
       ).toBeTruthy();
       expect(err.name).toEqual(err.toString());
     });
@@ -67,16 +70,16 @@ describe('YHTTPError', () => {
 
       expect(err.code).toEqual('E_ERROR_1');
       expect(err.httpCode).toEqual(400);
-      expect(err.debugValues).toEqual(['arg1.1', 'arg1.2']);
+      expect(err.debug).toEqual(['arg1.1', 'arg1.2']);
       expect(
         -1 !==
-          (err.stack || '').indexOf(
+          printStackTrace(err).indexOf(
             'YHTTPError[400]: E_ERROR_1 (["arg1.1","arg1.2"], {})',
           ),
       ).toBeTruthy();
       expect(
         -1 ===
-          (err.stack || '').indexOf(
+          printStackTrace(err).indexOf(
             'YHTTPError[500]: E_ERROR_2 (arg2.1, arg2.2)',
           ),
       ).toBeTruthy();
@@ -89,19 +92,21 @@ describe('YHTTPError', () => {
       const baseErr = new Error('E_ERROR');
 
       (baseErr as YHTTPError).code = 'E_ERROR';
-      (baseErr as YHTTPError).debugValues = ['baseParam1', 'baseParam2'];
+      (baseErr as YHTTPError).debug = ['baseParam1', 'baseParam2'];
       (baseErr as YHTTPError).httpCode = 418;
 
       const err = YHTTPError.bump(baseErr, 'E_ERROR_2', ['arg1', 'arg2'], 400);
 
       expect(err.code).toEqual('E_ERROR_2');
-      expect(err.wrappedErrors.length).toEqual(1);
+      expect(err.cause).toBeDefined();
       expect(err.httpCode).toEqual(418);
-      expect(err.debugValues).toEqual(['arg1', 'arg2']);
-      expect(-1 !== (err.stack || '').indexOf('Error: E_ERROR')).toBeTruthy();
+      expect(err.debug).toEqual(['arg1', 'arg2']);
+      expect(
+        -1 !== printStackTrace(err).indexOf('Error: E_ERROR'),
+      ).toBeTruthy();
       expect(
         -1 !==
-          (err.stack || '').indexOf(
+          printStackTrace(err).indexOf(
             'YHTTPError[418]: E_ERROR_2 (["arg1","arg2"], {})',
           ),
       ).toBeTruthy();
@@ -114,15 +119,17 @@ describe('YHTTPError', () => {
       const err = YHTTPError.wrap(new Error('This is an error!'));
 
       expect(err.code).toEqual('E_UNEXPECTED');
-      expect(err.wrappedErrors.length).toEqual(1);
+      expect(err.cause).toBeDefined();
       expect(err.httpCode).toEqual(500);
-      expect(err.debugValues).toEqual([]);
+      expect(err.debug).toEqual([]);
       expect(
-        -1 !== (err.stack || '').indexOf('Error: This is an error!'),
+        -1 !== printStackTrace(err).indexOf('Error: This is an error!'),
       ).toBeTruthy();
       expect(
         -1 !==
-          (err.stack || '').indexOf('YHTTPError[500]: E_UNEXPECTED ([], {})'),
+          printStackTrace(err).indexOf(
+            'YHTTPError[500]: E_UNEXPECTED ([], {})',
+          ),
       ).toBeTruthy();
       expect(err.name).toEqual(err.toString());
     });
@@ -131,12 +138,15 @@ describe('YHTTPError', () => {
       const err = YHTTPError.wrap(new Error('E_ERROR'));
 
       expect(err.code).toEqual('E_ERROR');
-      expect(err.wrappedErrors.length).toEqual(1);
+      expect(err.cause).toBeDefined();
       expect(err.httpCode).toEqual(500);
-      expect(err.debugValues).toEqual([]);
-      expect(-1 !== (err.stack || '').indexOf('Error: E_ERROR')).toBeTruthy();
+      expect(err.debug).toEqual([]);
       expect(
-        -1 !== (err.stack || '').indexOf('YHTTPError[500]: E_ERROR ([], {})'),
+        -1 !== printStackTrace(err).indexOf('Error: E_ERROR'),
+      ).toBeTruthy();
+      expect(
+        -1 !==
+          printStackTrace(err).indexOf('YHTTPError[500]: E_ERROR ([], {})'),
       ).toBeTruthy();
       expect(err.name).toEqual(err.toString());
     });
@@ -150,13 +160,15 @@ describe('YHTTPError', () => {
       );
 
       expect(err.code).toEqual('E_ERROR_2');
-      expect(err.wrappedErrors.length).toEqual(1);
+      expect(err.cause).toBeDefined();
       expect(err.httpCode).toEqual(400);
-      expect(err.debugValues).toEqual(['arg1', 'arg2']);
-      expect(-1 !== (err.stack || '').indexOf('Error: E_ERROR')).toBeTruthy();
+      expect(err.debug).toEqual(['arg1', 'arg2']);
+      expect(
+        -1 !== printStackTrace(err).indexOf('Error: E_ERROR'),
+      ).toBeTruthy();
       expect(
         -1 !==
-          (err.stack || '').indexOf(
+          printStackTrace(err).indexOf(
             'YHTTPError[400]: E_ERROR_2 (["arg1","arg2"], {})',
           ),
       ).toBeTruthy();
@@ -171,19 +183,19 @@ describe('YHTTPError', () => {
       const err = YHTTPError.wrap(baseErr, 'E_ERROR_2', ['arg3', 'arg4'], 400);
 
       expect(err.code).toEqual('E_ERROR_2');
-      expect(err.wrappedErrors.length).toEqual(1);
+      expect(err.cause).toBeDefined();
       expect(err.httpCode).toEqual(400);
       expect(err.headers).toEqual(baseErr.headers);
-      expect(err.debugValues).toEqual(['arg3', 'arg4']);
+      expect(err.debug).toEqual(['arg3', 'arg4']);
       expect(
         -1 !==
-          (err.stack || '').indexOf(
+          printStackTrace(err).indexOf(
             'YHTTPError[400]: E_ERROR (["arg1","arg2"], {"A-Header":"A value"})',
           ),
       ).toBeTruthy();
       expect(
         -1 !==
-          (err.stack || '').indexOf(
+          printStackTrace(err).indexOf(
             'YHTTPError[400]: E_ERROR_2 (["arg3","arg4"], {"A-Header":"A value"})',
           ),
       ).toBeTruthy();
@@ -204,24 +216,24 @@ describe('YHTTPError', () => {
       );
 
       expect(err.code).toEqual('E_ERROR_3');
-      expect(err.wrappedErrors.length).toEqual(2);
+      expect(err.cause).toBeDefined();
       expect(err.httpCode).toEqual(402);
-      expect(err.debugValues).toEqual(['arg3.1', 'arg3.2']);
+      expect(err.debug).toEqual(['arg3.1', 'arg3.2']);
       expect(
         -1 !==
-          (err.stack || '').indexOf(
+          printStackTrace(err).indexOf(
             'YHTTPError[400]: E_ERROR_1 (["arg1.1","arg1.2"], {})',
           ),
       ).toBeTruthy();
       expect(
         -1 !==
-          (err.stack || '').indexOf(
+          printStackTrace(err).indexOf(
             'YHTTPError[401]: E_ERROR_2 (["arg2.1","arg2.2"], {})',
           ),
       ).toBeTruthy();
       expect(
         -1 !==
-          (err.stack || '').indexOf(
+          printStackTrace(err).indexOf(
             'YHTTPError[402]: E_ERROR_3 (["arg3.1","arg3.2"], {})',
           ),
       ).toBeTruthy();
